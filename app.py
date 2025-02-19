@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 import os
 from db import UsersDatabase, UserSpecificDatabase
+import sqlite3
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"  # Required for session and flashing messages
@@ -75,6 +76,37 @@ def logout():
     return redirect(url_for("login"))
 
 
+@app.route("/delete_account", methods=["POST"])
+def delete_account():
+    if "user_email" not in session:
+        flash("Please log in to access this page.", "error")
+        return redirect(url_for("login"))
+
+    user_email = session["user_email"]
+
+    # Fetch the user-specific database path from users.db
+    user_data = users_db.fetch_one(
+        "SELECT db_path FROM users WHERE email = ?", (user_email,)
+    )
+    if not user_data:
+        flash("User not found.", "error")
+        return redirect(url_for("home"))
+
+    user_db_path = user_data[0]
+
+    # Delete the user's record from users.db
+    users_db.execute_query("DELETE FROM users WHERE email = ?", (user_email,))
+
+    # Delete the user-specific database file
+    if os.path.exists(user_db_path):
+        os.remove(user_db_path)
+
+    # Clear session and notify the user
+    session.clear()
+    flash("Your account and data have been successfully deleted.", "success")
+    return redirect(url_for("login"))
+
+
 @app.route("/clients", methods=["GET"])
 def clients():
     if "user_email" not in session:
@@ -83,9 +115,6 @@ def clients():
 
     # Render a page for clients (you can customize this page)
     return render_template("clients.html")
-
-
-import sqlite3
 
 
 @app.route("/payments", methods=["GET"])

@@ -13,6 +13,15 @@
         <p>Please select what you want to do:</p>
         <button onclick="window.location.href='/clients';">See/Add Clients</button>
         <button onclick="window.location.href='/payments';">Check/Add Payments</button>
+
+        <hr>
+
+        <!-- Add a section for account-related actions -->
+        <div class="account-actions">
+            <form action="{{ url_for('delete_account') }}" method="post" onsubmit="return confirm('Are you sure you want to delete your account? This action will delete the database and your user information and it cannot be undone.')">
+                <button type="submit" class="btn btn-danger">Delete Account</button>
+            </form>
+        </div>
     </div>
 </body>
 </html>
