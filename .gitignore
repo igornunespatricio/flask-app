@@ -1,0 +1,5 @@
+venv/
+/databases/*
+!/databases/.gitkeep
+users.db
+__pycache__/
