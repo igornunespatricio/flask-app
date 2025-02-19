@@ -130,6 +130,10 @@ class UserSpecificDatabase(DatabaseManager):
             (name, email, status),
         )
 
+    def delete_client(self, client_id):
+        """Delete a client by ID."""
+        self.execute_query("DELETE FROM clients WHERE id = ?", (client_id,))
+
     def add_payment(self, client_id, amount, payment_date):
         """Add a new payment."""
         self.execute_query(

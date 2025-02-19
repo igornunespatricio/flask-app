@@ -46,6 +46,7 @@
                     <th>Name</th>
                     <th>Email</th>
                     <th>Status</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -55,13 +56,19 @@
                     <td>{{ client[1] }}</td> <!-- client[1] is the Name -->
                     <td>{{ client[2] }}</td> <!-- client[2] is the Email -->
                     <td>{{ client[3] }}</td> <!-- client[3] is the Status -->
+                    <td>
+                        <form action="{{ url_for('delete_client') }}" method="POST" onsubmit="return confirmDeletion();">
+                            <input type="hidden" name="client_id" value="{{ client[0] }}">
+                            <button type="submit" class="delete-button">Delete</button>
+                        </form>
+                    </td>
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="4">No clients found</td>
+                    <td colspan="5">No clients found</td>
                 </tr>
                 {% endfor %}
-            </tbody>
+            </tbody>            
         </table>
     </div>
 
@@ -74,6 +81,9 @@
             } else {
                 form.style.display = "none";
             }
+        }
+        function confirmDeletion() {
+            return confirm("Are you sure you want to delete this client?");
         }
     </script>
 </body>

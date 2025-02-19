@@ -148,6 +148,26 @@ def add_client():
     return redirect(url_for("clients"))
 
 
+@app.route("/delete_client", methods=["POST"])
+def delete_client():
+    if "user_email" not in session:
+        flash("Please log in to access this page.", "error")
+        return redirect(url_for("login"))
+
+    # Get the client ID from the form
+    client_id = request.form["client_id"]
+
+    # Get the user-specific database path
+    user_email = session["user_email"]
+    user_db_path = os.path.join(databases_dir, f"{user_email}_db.sqlite")
+    user_db = UserSpecificDatabase(user_db_path)
+
+    # Delete the client
+    user_db.delete_client(client_id)
+    flash("Client deleted successfully!", "success")
+    return redirect(url_for("clients"))
+
+
 @app.route("/payments", methods=["GET"])
 def payments():
     if "user_email" not in session:
