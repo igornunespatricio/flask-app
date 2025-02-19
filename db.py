@@ -57,7 +57,8 @@ class UsersDatabase(DatabaseManager):
                 email TEXT UNIQUE NOT NULL,
                 password_hash TEXT NOT NULL,
                 salt TEXT NOT NULL,
-                db_path TEXT NOT NULL
+                db_path TEXT NOT NULL,
+                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
             )
         """
         self.execute_query(query)

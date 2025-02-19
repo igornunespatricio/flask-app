@@ -50,8 +50,10 @@ def create_account():
 
         # Add user to the UsersDatabase
         if users_db.add_user(email, password, user_db_path):
-            flash("Account created successfully!", "success")
-            return redirect(url_for("login"))
+            # Store the user's email in the session
+            session["user_email"] = email
+            flash("Account created successfully! You are now logged in.", "success")
+            return redirect(url_for("home"))
         else:
             flash("Email already exists!", "error")
 
