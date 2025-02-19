@@ -44,6 +44,92 @@ h1 {
     margin-bottom: 20px;
 }
 
+/* Form Styling for Add Client */
+.add-client-form {
+    display: none;
+    margin-top: 20px;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    width: 100%; /* Make labels align with input fields */
+    text-align: left; /* Align text to the left */
+}
+
+/* Inputs and Select Field */
+input[type="text"],
+input[type="email"],
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+    background-color: #fff;
+    color: #333;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+select:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+}
+
+select {
+    appearance: none; /* Remove default dropdown arrow for consistency */
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='gray'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E") no-repeat right 10px center;
+    background-size: 16px;
+    cursor: pointer;
+}
+
+/* Select Field Styling */
+select {
+    width: 100%; /* Make the select element take full width of its container */
+    max-width: 300px; /* Restrict the width to match the other input fields */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+    background-color: #fff;
+    color: #333;
+}
+
+/* Adjust the select focus styling as well */
+select:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+}
+
+/* Button Styling */
+button, .back-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+}
+
+button:hover, .back-button:hover {
+    background-color: #45a049;
+}
+
 /* Buttons */
 button, .back-button {
     background-color: #4CAF50;

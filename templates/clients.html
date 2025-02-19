@@ -16,6 +16,28 @@
             <button class="back-button">Back to Home</button>
         </a>
 
+        <!-- Add Client Button -->
+        <button class="add-button" onclick="toggleForm()">+ Add Client</button>
+
+        <!-- Add Client Form -->
+        <div id="add-client-form" class="add-client-form">
+            <form action="{{ url_for('add_client') }}" method="POST">
+                <label for="name">Name:</label><br>
+                <input type="text" id="name" name="name" required><br><br>
+
+                <label for="email">Email:</label><br>
+                <input type="email" id="email" name="email" required><br><br>
+
+                <label for="status">Status:</label><br>
+                <select id="status" name="status" required>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select><br><br>
+
+                <button type="submit" class="add-button">Submit</button>
+            </form>
+        </div>
+
         <!-- Displaying clients -->
         <table>
             <thead>
@@ -23,16 +45,16 @@
                     <th>ID</th>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Status</th> <!-- New Status Column -->
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
                 {% for client in clients %}
                 <tr>
-                    <td>{{ client[0] }}</td>  <!-- client[0] is the ID -->
-                    <td>{{ client[1] }}</td>  <!-- client[1] is the Name -->
-                    <td>{{ client[2] }}</td>  <!-- client[2] is the Email -->
-                    <td>{{ client[3] }}</td>  <!-- client[3] is the Status -->
+                    <td>{{ client[0] }}</td> <!-- client[0] is the ID -->
+                    <td>{{ client[1] }}</td> <!-- client[1] is the Name -->
+                    <td>{{ client[2] }}</td> <!-- client[2] is the Email -->
+                    <td>{{ client[3] }}</td> <!-- client[3] is the Status -->
                 </tr>
                 {% else %}
                 <tr>
@@ -42,5 +64,17 @@
             </tbody>
         </table>
     </div>
+
+    <!-- JavaScript to toggle form visibility -->
+    <script>
+        function toggleForm() {
+            const form = document.getElementById("add-client-form");
+            if (form.style.display === "none" || form.style.display === "") {
+                form.style.display = "block";
+            } else {
+                form.style.display = "none";
+            }
+        }
+    </script>
 </body>
 </html>

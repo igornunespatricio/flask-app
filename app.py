@@ -115,8 +115,37 @@ def clients():
         flash("Please log in to access this page.", "error")
         return redirect(url_for("login"))
 
-    # Render a page for clients (you can customize this page)
-    return render_template("clients.html")
+    # Get the user-specific database path
+    user_email = session["user_email"]
+    user_db_path = os.path.join(databases_dir, f"{user_email}_db.sqlite")
+    user_db = UserSpecificDatabase(user_db_path)
+
+    # Get the list of clients
+    clients = user_db.get_clients()
+
+    return render_template("clients.html", clients=clients)
+
+
+@app.route("/add_client", methods=["POST"])
+def add_client():
+    if "user_email" not in session:
+        flash("Please log in to access this page.", "error")
+        return redirect(url_for("login"))
+
+    # Get form data
+    name = request.form["name"]
+    email = request.form["email"]
+    status = request.form["status"]
+
+    # Get the user-specific database path
+    user_email = session["user_email"]
+    user_db_path = os.path.join(databases_dir, f"{user_email}_db.sqlite")
+    user_db = UserSpecificDatabase(user_db_path)
+
+    # Add the new client
+    user_db.add_client(name, email, status)
+    flash("Client added successfully!", "success")
+    return redirect(url_for("clients"))
 
 
 @app.route("/payments", methods=["GET"])
