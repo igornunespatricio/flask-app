@@ -135,11 +135,11 @@ class UserSpecificDatabase(DatabaseManager):
         self.execute_query("DELETE FROM clients WHERE id = ?", (client_id,))
 
     def add_payment(self, client_id, amount, payment_date):
-        """Add a new payment."""
-        self.execute_query(
-            "INSERT INTO payments (client_id, amount, payment_date) VALUES (?, ?, ?)",
-            (client_id, amount, payment_date),
-        )
+        query = """
+            INSERT INTO payments (client_id, amount, payment_date)
+            VALUES (?, ?, ?)
+        """
+        self.execute_query(query, (client_id, amount, payment_date))
 
     def get_clients(self):
         """Retrieve all clients."""
@@ -148,3 +148,27 @@ class UserSpecificDatabase(DatabaseManager):
     def get_payments(self):
         """Retrieve all payments."""
         return self.fetch_all("SELECT * FROM payments")
+
+    def get_clients_dropdown(self):
+        """Retrieve all clients' IDs and names for dropdowns."""
+        return self.fetch_all("SELECT id, name FROM clients")
+
+    def get_all_payments(self):
+        """Retrieve all payments with client names."""
+        query = """
+            SELECT payments.id, clients.name AS client_name, payments.amount, payments.payment_date
+            FROM payments
+            JOIN clients ON payments.client_id = clients.id;
+        """
+        results = self.fetch_all(query)
+        # Convert each row (tuple) into a dictionary
+        payments = [
+            {
+                "id": row[0],
+                "client_name": row[1],
+                "amount": row[2],
+                "payment_date": row[3],
+            }
+            for row in results
+        ]
+        return payments

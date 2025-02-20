@@ -16,24 +16,48 @@
             <button class="back-button">Back to Home</button>
         </a>
 
+        <!-- Add Payment Button -->
+        <button class="add-button" onclick="togglePaymentForm()">+ Add Payment</button>
+
+        <!-- Add Payment Form -->
+        <div id="add-payment-form" class="add-payment-form" style="display: none;">
+            <form method="POST" action="{{ url_for('add_payment') }}">
+                <label for="client_id">Client:</label>
+                <select id="client_id" name="client_id" required>
+                    {% for client in clients %}
+                        <option value="{{ client[0] }}">{{ client[1] }}</option>
+                    {% endfor %}
+                </select>
+            
+                <label for="amount">Amount:</label>
+                <input type="number" id="amount" name="amount" step="0.01" required>
+            
+                <label for="payment_date">Payment Date:</label>
+                <input type="date" id="payment_date" name="payment_date" required>
+            
+                <button type="submit">Add Payment</button>
+            </form>
+            
+        </div>
+
         <!-- Displaying payments -->
         <table>
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Client Name</th> <!-- Updated for readability -->
+                    <th>Client Name</th>
                     <th>Amount</th>
                     <th>Payment Date</th>
-                    <th>Actions</th> <!-- For future functionality -->
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for payment in payments %}
                 <tr>
-                    <td>{{ payment.id }}</td>  <!-- Using object attributes for better readability -->
-                    <td>{{ payment.client_name }}</td>  <!-- Assumes you fetch the client's name in the query -->
-                    <td>${{ payment.amount }}</td>  <!-- Formats as currency -->
-                    <td>{{ payment.payment_date.strftime('%Y-%m-%d') }}</td>  <!-- Formats the date -->
+                    <td>{{ payment.id }}</td>
+                    <td>{{ payment.client_name }}</td>
+                    <td>${{ payment.amount }}</td>
+                    <td>{{ payment.payment_date }}</td>
                     <td>
                         <a href="/edit_payment/{{ payment.id }}">Edit</a> | 
                         <a href="/delete_payment/{{ payment.id }}" onclick="return confirm('Are you sure you want to delete this payment?');">Delete</a>
@@ -47,5 +71,17 @@
             </tbody>
         </table>
     </div>
+
+    <!-- JavaScript to toggle form visibility -->
+    <script>
+        function togglePaymentForm() {
+            const form = document.getElementById("add-payment-form");
+            if (form.style.display === "none" || form.style.display === "") {
+                form.style.display = "block";
+            } else {
+                form.style.display = "none";
+            }
+        }
+    </script>
 </body>
 </html>

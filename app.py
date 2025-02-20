@@ -180,32 +180,51 @@ def payments():
 
     # Connect to the user-specific database
     try:
-        db_connection = sqlite3.connect(user_db_path)
-        cursor = db_connection.cursor()
+        user_db = UserSpecificDatabase(user_db_path)
 
-        # Example query to fetch payment data
-        query = """
-        SELECT payments.id, clients.name AS client_name, payments.amount, payments.payment_date
-        FROM payments
-        JOIN clients ON payments.client_id = clients.id;
-        """
-        cursor.execute(query)
-        payments = [
-            {
-                "id": row[0],
-                "client_name": row[1],
-                "amount": row[2],
-                "payment_date": row[3],
-            }
-            for row in cursor.fetchall()
-        ]
-        db_connection.close()
+        # Fetch all payments and clients for the dropdown
+        payments = (
+            user_db.get_all_payments()
+        )  # Retrieve payment details (client name, amount, date, etc.)
+        clients = (
+            user_db.get_clients_dropdown()
+        )  # Retrieve client IDs and names for the dropdown
 
-        return render_template("payments.html", payments=payments)
+        # Render the payments page with both payments and clients data
+        return render_template("payments.html", payments=payments, clients=clients)
 
     except sqlite3.Error as e:
         flash(f"Database error: {e}", "error")
         return redirect(url_for("home"))
+
+
+@app.route("/add_payment", methods=["GET", "POST"])
+def add_payment():
+    if "user_email" not in session:
+        flash("Please log in to access this page.", "error")
+        return redirect(url_for("login"))
+
+    # Get the user-specific database path
+    user_email = session["user_email"]
+    user_db_path = os.path.join(databases_dir, f"{user_email}_db.sqlite")
+    user_db = UserSpecificDatabase(user_db_path)
+
+    if request.method == "POST":
+        # Extract form data
+        client_id = request.form["client_id"]
+        amount = float(request.form["amount"])
+        payment_date = request.form["payment_date"]
+
+        # Call the database method to add the payment
+        user_db.add_payment(client_id, amount, payment_date)
+        flash("Payment added successfully!", "success")
+
+        # Redirect to the payments page
+        return redirect(url_for("payments"))
+
+    # Fetch clients for the dropdown list
+    clients = user_db.get_clients_dropdown()  # Retrieves only (id, name)
+    return render_template("add_payment.html", clients=clients)
 
 
 if __name__ == "__main__":
