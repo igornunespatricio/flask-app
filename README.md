@@ -4,6 +4,7 @@ This is a Flask-based application for managing users, clients, and payments. It 
 
 ## Project Structure
 
+```bash
 project_test/
 │
 ├── app.py                        # The main Flask application file
@@ -28,6 +29,7 @@ project_test/
     ├── clients.html              # Template for viewing/adding clients
     ├── payments.html             # Template for viewing/adding payments
     └── ...                       # Other HTML templates
+```
 
 
 ## Data Persistence
