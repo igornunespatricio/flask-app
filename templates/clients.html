@@ -38,6 +38,29 @@
             </form>
         </div>
 
+        <!-- Edit Client Form -->
+        <div id="edit-client-form" class="edit-client-form" style="display: none;">
+            <form action="{{ url_for('edit_client') }}" method="POST">
+                <input type="hidden" id="edit-client-id" name="client_id">
+
+                <label for="edit-name">Name:</label><br>
+                <input type="text" id="edit-name" name="name" required><br><br>
+
+                <label for="edit-email">Email:</label><br>
+                <input type="email" id="edit-email" name="email" required><br><br>
+
+                <label for="edit-status">Status:</label><br>
+                <select id="edit-status" name="status" required>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select><br><br>
+
+                <button type="submit" class="edit-button">Submit</button>
+                <button type="button" onclick="toggleEditForm()" class="cancel-button">Cancel</button>
+            </form>
+        </div>
+
+
         <!-- Displaying clients -->
         <table>
             <thead>
@@ -57,11 +80,17 @@
                     <td>{{ client[2] }}</td> <!-- client[2] is the Email -->
                     <td>{{ client[3] }}</td> <!-- client[3] is the Status -->
                     <td>
-                        <form action="{{ url_for('delete_client') }}" method="POST" onsubmit="return confirmDeletion();">
-                            <input type="hidden" name="client_id" value="{{ client[0] }}">
-                            <button type="submit" class="delete-button">Delete</button>
-                        </form>
-                    </td>
+                        <div class="action-buttons">
+                            <!-- Edit Button -->
+                            <button type="button" class="edit-button" onclick="toggleEditForm('{{ client[0] }}', '{{ client[1] }}', '{{ client[2] }}', '{{ client[3] }}')">Edit</button>
+                    
+                            <!-- Delete Form -->
+                            <form action="{{ url_for('delete_client') }}" method="POST" onsubmit="return confirmDeletion();" style="display: inline;">
+                                <input type="hidden" name="client_id" value="{{ client[0] }}">
+                                <button type="submit" class="delete-button">Delete</button>
+                            </form>
+                        </div>
+                    </td>                    
                 </tr>
                 {% else %}
                 <tr>
@@ -84,6 +113,21 @@
         }
         function confirmDeletion() {
             return confirm("Are you sure you want to delete this client?");
+        }
+        function toggleEditForm(clientId = '', name = '', email = '', status = '') {
+            const form = document.getElementById("edit-client-form");
+
+            if (form.style.display === "none" || form.style.display === "") {
+                form.style.display = "block";
+
+                // Prefill form with client data
+                document.getElementById("edit-client-id").value = clientId;
+                document.getElementById("edit-name").value = name;
+                document.getElementById("edit-email").value = email;
+                document.getElementById("edit-status").value = status;
+            } else {
+                form.style.display = "none";
+            }
         }
     </script>
 </body>

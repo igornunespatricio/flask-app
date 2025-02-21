@@ -248,5 +248,28 @@ def delete_payment():
     return redirect(url_for("payments"))
 
 
+@app.route("/edit_client", methods=["POST"])
+def edit_client():
+    if "user_email" not in session:
+        flash("Please log in to access this page.", "error")
+        return redirect(url_for("login"))
+
+    # Get the user-specific database path
+    user_email = session["user_email"]
+    user_db_path = os.path.join(databases_dir, f"{user_email}_db.sqlite")
+    user_db = UserSpecificDatabase(user_db_path)
+
+    # Get client data from form
+    client_id = request.form["client_id"]
+    name = request.form["name"]
+    email = request.form["email"]
+    status = request.form["status"]
+
+    # Update the client in the database
+    user_db.update_client(client_id, name, email, status)
+    flash("Client updated successfully!", "success")
+    return redirect(url_for("clients"))
+
+
 if __name__ == "__main__":
     app.run(debug=True)

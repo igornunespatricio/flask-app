@@ -176,3 +176,10 @@ class UserSpecificDatabase(DatabaseManager):
     def delete_payment(self, payment_id):
         """Delete a payment by ID."""
         self.execute_query("DELETE FROM payments WHERE id = ?", (payment_id,))
+
+    def update_client(self, client_id, name, email, status):
+        """Update a client's details by ID."""
+        self.execute_query(
+            "UPDATE clients SET name = ?, email = ?, status = ? WHERE id = ?",
+            (name, email, status, client_id),
+        )
