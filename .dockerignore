@@ -1,0 +1,14 @@
+# Ignore the files inside the databases folder but keep the folder itself
+databases/*
+
+# Ignore the venv folder (virtual environment)
+venv/
+
+# Ignore the users.db file
+users.db
+
+# Ignore Python bytecode cache
+__pycache__/
+
+# Ignore Git-related files
+.git/

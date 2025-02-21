@@ -1,0 +1,17 @@
+services:
+  app:
+    build: .
+    image: image-flask-app  # Name of the image
+    container_name: container-flask-app
+    ports:
+      - "5000:5000"  # Map the container's port 5000 to the host's port 5000
+    volumes:
+      - volume-flask-app:/app  # Mount project directory to /app in the container
+    environment:
+      - FLASK_APP=app.py  # Define environment variable for Flask app
+      - FLASK_ENV=development  # Set environment to development for debugging
+    restart: always  # Automatically restart the container if it stops
+
+volumes:
+  volume-flask-app:  
+    name: volume-flask-app  # Name of volume for persistent storage
