@@ -123,12 +123,23 @@ class UserSpecificDatabase(DatabaseManager):
                             )"""
         )
 
+    def client_exists(self, email):
+        """Check if a client with the given email already exists."""
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT 1 FROM clients WHERE email = ?", (email,))
+            return cursor.fetchone() is not None  # Returns True if email exists
+
     def add_client(self, name, email, status):
-        """Add a new client."""
-        self.execute_query(
-            "INSERT INTO clients (name, email, status) VALUES (?, ?, ?)",
-            (name, email, status),
-        )
+        """Adds a new client if the email does not already exist."""
+        if self.client_exists(email):
+            return "Email is already registered."
+        else:
+            self.execute_query(
+                "INSERT INTO clients (name, email, status) VALUES (?, ?, ?)",
+                (name, email, status),
+            )
+            return "Email registered successfully."
 
     def delete_client(self, client_id):
         """Delete a client by ID."""

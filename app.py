@@ -142,9 +142,15 @@ def add_client():
     user_db_path = os.path.join(databases_dir, f"{user_email}_db.sqlite")
     user_db = UserSpecificDatabase(user_db_path)
 
-    # Add the new client
-    user_db.add_client(name, email, status)
-    flash("Client added successfully!", "success")
+    # Attempt to add the client
+    message = user_db.add_client(name, email, status)
+
+    # Display appropriate flash message
+    if message == "Email is already registered.":
+        flash(message, "error")  # Show error message if email exists
+    else:
+        flash(message, "success")  # Show success message if client is added
+
     return redirect(url_for("clients"))
 
 
