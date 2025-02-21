@@ -172,3 +172,7 @@ class UserSpecificDatabase(DatabaseManager):
             for row in results
         ]
         return payments
+
+    def delete_payment(self, payment_id):
+        """Delete a payment by ID."""
+        self.execute_query("DELETE FROM payments WHERE id = ?", (payment_id,))

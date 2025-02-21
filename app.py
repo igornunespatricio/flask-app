@@ -227,5 +227,26 @@ def add_payment():
     return render_template("add_payment.html", clients=clients)
 
 
+@app.route("/delete_payment", methods=["POST"])
+def delete_payment():
+    if "user_email" not in session:
+        flash("Please log in to access this page.", "error")
+        return redirect(url_for("login"))
+
+    # Get the user-specific database path
+    user_email = session["user_email"]
+    user_db_path = os.path.join(databases_dir, f"{user_email}_db.sqlite")
+    user_db = UserSpecificDatabase(user_db_path)
+
+    # Get the payment ID from the form
+    payment_id = request.form["payment_id"]
+
+    # Call the delete_payment function
+    user_db.delete_payment(payment_id)
+    flash("Payment deleted successfully!", "success")
+
+    return redirect(url_for("payments"))
+
+
 if __name__ == "__main__":
     app.run(debug=True)
