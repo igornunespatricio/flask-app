@@ -13,6 +13,7 @@ project_test/
 ├── .dockerignore                 # Specifies which files to ignore when building Docker image
 ├── Dockerfile                    # The configuration file for building the Docker image
 ├── docker-compose.yml            # The Docker Compose file for container orchestration
+├── entrypoint.sh                 # Entrypoint script for starting the application
 ├── users.db                      # SQLite database for storing user login data
 │
 ├── databases/                    # Directory for user-specific databases (clients and payments data)
@@ -24,13 +25,12 @@ project_test/
 │   ├── style.css                 # Example CSS file for the frontend
 │   └── ...                       # Other static files
 │
-└── templates/                    # Directory for HTML template files
-    ├── home.html                 # Home page template
-    ├── clients.html              # Template for viewing/adding clients
-    ├── payments.html             # Template for viewing/adding payments
-    └── ...                       # Other HTML templates
+├── templates/                    # Directory for HTML template files
+│   ├── home.html                 # Home page template
+│   ├── clients.html              # Template for viewing/adding clients
+│   ├── payments.html             # Template for viewing/adding payments
+│   └── ...                       # Other HTML templates
 ```
-
 
 ## Data Persistence
 
@@ -45,11 +45,11 @@ project_test/
 - Passwords are securely hashed before being stored in the `users.db` file.
 
 ### Clients Management
-- Once logged in, users can view, add, edit, or delete client information. 
+- Once logged in, users can view, add, edit, or delete client information.
 - Each user has a separate `clients` table in their own database.
 
 ### Payments Management
-- Users can view and add payments related to their clients. 
+- Users can view and add payments related to their clients.
 - Payments are stored in the `payments` table in each user-specific database.
 
 ### Data Isolation
@@ -64,7 +64,7 @@ project_test/
     cd project_test
     ```
 
-2. **Install dependencies**:
+2. **Install dependencies** (for local development without Docker):
 
     ```bash
     pip install -r requirements.txt
@@ -97,4 +97,6 @@ The `docker-compose.yml` file simplifies the management of the application, incl
 ## Notes
 
 - The application uses **Docker volumes** to persist data across container restarts. The user-specific data is stored in the `databases` directory and will remain intact even if the container stops.
-- The app runs in **development mode**, and **Flask debugging** is enabled for easier development and troubleshooting.
+- The app runs in **production mode**, automatically selecting **Gunicorn** or **Waitress** based on the operating system.
+- **Gunicorn** is used for Linux/macOS, and **Waitress** is used for Windows to ensure compatibility.
+
