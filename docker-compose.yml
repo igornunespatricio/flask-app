@@ -2,6 +2,7 @@ services:
   app:
     build: .
     image: image-flask-app  # Name of the image
+    pull_policy: build  # Prevents Docker from trying to pull before building
     container_name: container-flask-app
     ports:
       - "5000:5000"  # Map the container's port 5000 to the host's port 5000

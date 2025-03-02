@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 import os
 from db import UsersDatabase, UserSpecificDatabase
 import sqlite3
+from utils import delete_file  # Import delete_file from utils.py
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"  # Required for session and flashing messages
@@ -96,16 +97,26 @@ def delete_account():
 
     user_db_path = user_data[0]
 
-    # Delete the user's record from users.db
-    users_db.execute_query("DELETE FROM users WHERE email = ?", (user_email,))
+    try:
+        if os.path.exists(user_db_path):
+            # Explicitly close the database connection before deletion
+            conn = sqlite3.connect(user_db_path)
+            conn.close()  # ✅ Ensure the DB connection is closed first
 
-    # Delete the user-specific database file
-    if os.path.exists(user_db_path):
-        os.remove(user_db_path)
+            # Use delete_file() to terminate processes using the file and then delete it
+            delete_file(user_db_path)
 
-    # Clear session and notify the user
-    session.clear()
-    flash("Your account and data have been successfully deleted.", "success")
+        # Delete the user's record from users.db
+        users_db.execute_query("DELETE FROM users WHERE email = ?", (user_email,))
+
+        # Clear session after successful deletion
+        session.clear()
+
+        flash("Your account and data have been successfully deleted.", "success")
+    except Exception as e:
+        flash(f"Error deleting account: {e}", "error")
+        print(e)
+
     return redirect(url_for("login"))
 
 
@@ -278,4 +289,4 @@ def edit_client():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True, host="0.0.0.0", port=5000)
